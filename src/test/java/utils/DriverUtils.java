@@ -53,12 +53,26 @@ public class DriverUtils {
 			
 			FileUtils.copyFile(screenshot, new File(path));
 			scenario.embed(byte_screenshot, "image/png");
-			
-			Reporter.log("Screenshot - " + path);
 			}
 		catch (IOException e) {
 	         e.printStackTrace();
 	    }
+	}
+	
+	public static byte[] takeScreenShot(WebDriver driver) {
+		byte[] byte_screenshot = null;
+		try {
+			WebDriver augmentedDriver = new Augmenter().augment(driver);
+			File screenshot = ((TakesScreenshot) augmentedDriver).getScreenshotAs(OutputType.FILE);
+			byte_screenshot = ((TakesScreenshot) augmentedDriver).getScreenshotAs(OutputType.BYTES);
+			String nameScreenshot = ((RemoteWebDriver) driver).getCapabilities().getBrowserName() + "_" + SetUpSteps.getScenarioName().toLowerCase();
+			String path = getFullPath(nameScreenshot);
+			FileUtils.copyFile(screenshot, new File(path));
+			}
+		catch (IOException e) {
+	         e.printStackTrace();
+	    }
+		return byte_screenshot;
 	}
 	
 	private static String getFileName(String nameTest) throws IOException {

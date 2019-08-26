@@ -1,0 +1,19 @@
+{
+    "video":[
+        {"id":1,"name":"Code to Release using Artificial Intelligence and Machine Learning"},
+        {"id":2,"name":"Testimonial 1"},
+        {"id":3,"name":"Voting for the best prototype sketch - Part 4"},
+        {"id":4,"name":"AI testing: challenges and approaches | Keynote Address"},
+        {"id":5,"name":"Testing & Testers – What’s Next? | Panel Discussion"},
+        {"id":6,"name":"Run tests at scale with on-demand Selenium Grid using AWS Fargate"},
+        {"id":7,"name":"Felicitation and the STeP-IN Team"},
+        {"id":8,"name":"A vendor’s view on the state of test automation"},
+        {"id":9,"name":"Testimonial 2"},
+        {"id":10,"name":"Predictive Analytics based Regression Test Optimization"},
+        {"id":11,"name":"Design Sprint Master Training | Varun Chugh"}
+		
+    ],
+    "upload":[]
+
+
+}

@@ -1,12 +1,9 @@
 package stepdefinition;
 
-import org.testng.Assert;
-
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import pageobjects.DesktopLoginPage;
-import pageobjects.MobileLoginPage;
+import utils.APIUtils;
+import utils.JsonUtil;
 
 public class WorkflowSteps extends BaseSteps{
 
@@ -15,31 +12,56 @@ public class WorkflowSteps extends BaseSteps{
 		   super(ctx);
 		}
 		
-	@Given("{string} logs in to Dropbox web application.")
-	public void logs_in_to_Dropbox_web_application(String string) throws Throwable{
-		DesktopLoginPage loginPage = mmpController.desktopLoginPage("https://www.dropbox.com");
-		loginPage.doLogin();
+	@When("User open youtube url {string}")
+	public void user_open_youtube_url(String url) throws Throwable{
+		mmpController.YoutubeDesktopPage().setUrl(url);
 	}
 	
-	@Given("{string} logs in to Dropbox mobile application.")
-	public void logs_in_to_Dropbox_mobile_application(String string) throws Throwable{
-		MobileLoginPage loginPage = mmpController.mobileLoginPage("https://www.dropbox.com");
-		loginPage.doLogin();
-	}
-
-	@When("\"([^\"]*)\" shares the \"([^\"]*)\" with dropbox \"([^\"]*)\"$")
-	public void shares_with_dropbox_user(String string, String string2, String string3) throws Throwable{
-		mmpController.desktopHomePage().openShareDialogue("fileshare.txt");
-		mmpController.desktopHomePage().shareFileWithEmail("prachi20jain@gmail.com");
-	}
-
-	@Then("{string} receives the {string} on {string}")
-	public void verify_user_receives_file(String string, String string2, String string3) throws Throwable{
-		Assert.assertTrue(mmpController.desktopHomePage().isFileExist("fileshare.txt"),"file do not received by user 2"); 
+	@When("User Search for {string}")
+	public void search_youtube(String searchText) throws Throwable{
+		mmpController.YoutubeDesktopPage().search(searchText);
 	}
 	
-	@Then("{string} sign out from the application")
-	public void sign_out_from_the_application(String string) throws Throwable{
-		mmpController.desktopHomePage().signOut(); 
+	@When("User open {string} channel")
+	public void user_open_channel(String selectChannel) throws Throwable{
+		mmpController.YoutubeDesktopPage().openChannel(selectChannel);
 	}
+	
+	@When("User navigate to {string} tab")
+	public void user_navigate_to_channel_tab(String channelMenu) throws Throwable{
+		mmpController.YoutubeDesktopPage().selectHeader(channelMenu);
+	}
+	
+	@When("User fetch the video name {string} from the api call {string}")
+	public void fetch_the_video_name(String videoName,String apiUrl) throws Throwable{
+		SetUpSteps.setContextVariable(videoName,APIUtils.fetchVideoName());
+		System.out.println(SetUpSteps.getContextVariable(videoName));
+	}
+
+	@When("Locate the video {string} fetch from the api call")
+	public void locate_the_video_fetch_from_api_call(String videoName) throws Throwable{
+		mmpController.YoutubeDesktopPage().locateVideoToCentre(SetUpSteps.getContextVariable(videoName));
+	}
+	
+	@Then("Capture the screenshot")
+	public void capture_screenshot() throws Throwable{
+		SetUpSteps.setContextVariable("screenShot","required");	
+	}
+	
+	@When("User click the video {string}")
+	public void user_click_video(String videoName) throws Throwable{
+		mmpController.YoutubeDesktopPage().selectVideo(SetUpSteps.getContextVariable(videoName));	
+	}
+	
+	@When("Change the video quality to {string}")
+	public void change_the_video_quality(String videoQuality) throws Throwable{
+		mmpController.YoutubeDesktopPage().changeVideoQuality(videoQuality);
+	}
+	
+	@When("Get the list of upcoming videos")
+	public void Get_list_of_upcoming_videos() throws Throwable{
+		JsonUtil.createJson(mmpController.YoutubeDesktopPage().getUpcomingVideos());
+	}
+	
+	
 }

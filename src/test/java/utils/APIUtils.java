@@ -3,7 +3,6 @@ package utils;
 import java.io.File;
 
 import org.json.JSONObject;
-import org.testng.Reporter;
 
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
@@ -12,10 +11,10 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class APICalls {
+public class APIUtils {
 
-	public String fetchMovieName(){
-		String movieName = null;
+	public static String fetchVideoName(){
+		String videoName = null;
 		try {
 			int rand = ((int) (Math.random()*(11 - 1))) + 1;
 			
@@ -23,7 +22,7 @@ public class APICalls {
 			
 			HttpUrl url = new HttpUrl.Builder()
 					.scheme("https")
-					.host("c39ae9a5.ngrok.io")
+					.host("13fc90e5.ngrok.io")
 					.addPathSegments("video/" + rand)
 					.build();
 			
@@ -33,15 +32,14 @@ public class APICalls {
 			
 			 Response response = client.newCall(request).execute();
 				JSONObject object = new JSONObject(response.body().string());
-				movieName = (String) object.get("name");
+				videoName = (String) object.get("name");
 	}catch(Exception e){
 		e.printStackTrace();
 	}
-		return movieName;
+		return videoName;
 }
 	
-	public void postJsonfile(String url){
-		String movieName = null;
+	public static void postJsonfile(String url){
 	try{
 		OkHttpClient client = new OkHttpClient();
 		

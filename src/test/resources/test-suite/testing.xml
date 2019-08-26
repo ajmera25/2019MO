@@ -1,9 +1,9 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="smokeTests" parallel="tests" data-provider-thread-count="10" thread-count="20">
    
-	<test name="SmokeRunner">
+	<test name="YoutubeRunner">
 		<classes>
-			<class name="runners.SmokeRunner" />
+			<class name="runners.YoutubeRunner" />
 		</classes>
 	</test>
 	

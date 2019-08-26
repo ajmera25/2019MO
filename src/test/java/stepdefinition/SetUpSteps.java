@@ -141,8 +141,8 @@ public class SetUpSteps {
 				setMobileWebDriver(new RemoteWebDriver(new URL(hub), mobileoptions));	
 		}
 		mmpController = new Controller(browserName,getDesktopWebDriver(),getMobileWebDriver());
-		
 		Reporter.log("Test trigerred from machine: " + System.getenv().get("COMPUTERNAME"), true);
+		setContextVariable("screenShot","notRequired");
 		//Reporter.log("Executing " + scenarioName.get().toUpperCase() + " on grid node: " +getGridExecutionNode(hub), true);
 		initialized = true;
 		} catch(Exception e) {
@@ -224,7 +224,7 @@ public class SetUpSteps {
 		finally{
 			if(mmpController != null){
 				mmpController.getDesktopWebDriverClient().quit();
-				mmpController.getMobileWebDriverClient().quit();
+				//mmpController.getMobileWebDriverClient().quit();
 			}
 			}
     }
@@ -232,12 +232,11 @@ public class SetUpSteps {
 	
 	@AfterStep
 	public void afterScnearioStep(Scenario scenario) throws Exception{
-		int i = 0;
-		scenario.write("After each line" + i++);
-		if(scenario.isFailed()) {
-			 DriverUtils.takeScreenShot(scenario, getMobileWebDriver());
-	          DriverUtils.takeScreenShot(scenario, getDesktopWebDriver());
-        }
+		if(getContextVariable("screenShot").equals("required")) {
+			DriverUtils.takeScreenShot(scenario, getDesktopWebDriver());
+			setContextVariable("screenShot","notRequired");
+		}
+		
 	}
 	
 	/*public String getGridExecutionNode(String hubUrl){

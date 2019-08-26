@@ -130,11 +130,8 @@ public class WebDriverClient {
 	
 	public boolean setText(WebElement element, String inputText) throws Exception {
 		try{
-		click(element);
-		element.clear();
 		element.sendKeys(inputText);
-		return element.getText().equals(inputText.trim()) || element.getAttribute("value").equals(inputText.trim());
-		
+		return true;
 		}
 		catch(Exception e){
 			throw new TestFrameworkException("Failed to set text field with input text " + inputText,e);
@@ -543,7 +540,7 @@ public class WebDriverClient {
 	 * @return True if the element is enabled, false otherwise.
 	 * @throws Exception
 	 */
-	public boolean isWebElementEnabled(String element) throws Exception{
+	/*public boolean isWebElementEnabled(String element) throws Exception{
 		try{
 			if(isWebElementEnabled(myDriver.findElement(By.xpath(element)))){
 				return true;
@@ -551,7 +548,7 @@ public class WebDriverClient {
 		}
 		catch(Exception e){}
 		return false;
-	}
+	}*/
 	
 	
 	
@@ -1257,6 +1254,31 @@ public class WebDriverClient {
 		action.sendKeys(keyChord).build().perform();
 	}
 	
+	public void scrollElementToCentre(WebElement locator) {
+	String scrollElementIntoMiddle = "var viewPortHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);"
+	                                            + "var elementTop = arguments[0].getBoundingClientRect().top;"
+	                                            + "window.scrollBy(0, elementTop-(viewPortHeight/2));";
+
+	((JavascriptExecutor) myDriver).executeScript(scrollElementIntoMiddle, locator);
+}
 	
+	public void scrollWindowToFindElement(String locator) throws Exception {
+		        try {
+		        	//int count =1;
+		        	while(findElements(locator).size()<1) {
+		        	((JavascriptExecutor) myDriver).executeScript("window.scrollBy(0,4000)"); 
+		        	Thread.sleep(1000);
+		        	} } catch (Exception ex) {
+		        	throw new TestFrameworkException("failed to find element",ex);
+		    }
+	}
+	
+	public void scrollWindow() throws Exception {
+        try {
+        	((JavascriptExecutor) myDriver).executeScript("window.scrollBy(0,4000)"); 
+        	}catch (Exception ex) {
+        	throw new TestFrameworkException("failed to find element",ex);
+    }
+}
 }
 

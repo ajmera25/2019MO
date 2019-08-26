@@ -6,10 +6,7 @@ import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
-import pageobjects.DesktopHomePage;
-import pageobjects.DesktopLoginPage;
-import pageobjects.MobileHomePage;
-import pageobjects.MobileLoginPage;
+import pageobjects.YoutubeDesktopPage;
 import utils.WebDriverClient;
 
 
@@ -64,25 +61,8 @@ public class Controller {
 	// Page Controllers
 	// --------------------------------------------------
 	
-	public DesktopLoginPage desktopLoginPage(String url) throws Exception {
-		this.getDesktopWebDriverClient().setURL(url);
-		DesktopLoginPage oPage = initPage(DesktopLoginPage.class);
-		return oPage;
-	}
-	
-	public DesktopHomePage desktopHomePage() throws Exception {
-		DesktopHomePage oPage = initPage(DesktopHomePage.class);
-		return oPage;
-	}
-	
-	public MobileHomePage mobileHomePage() throws Exception {
-		MobileHomePage oPage = mobileInitPage(MobileHomePage.class);
-		return oPage;
-	}
-	
-	public MobileLoginPage mobileLoginPage(String url) throws Exception {
-		this.getMobileWebDriverClient().setURL(url);
-		MobileLoginPage oPage = mobileInitPage(MobileLoginPage.class);
+	public YoutubeDesktopPage YoutubeDesktopPage() throws Exception {
+		YoutubeDesktopPage oPage = initPage(YoutubeDesktopPage.class);
 		return oPage;
 	}
 	
