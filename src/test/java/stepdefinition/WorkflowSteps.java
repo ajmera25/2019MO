@@ -8,7 +8,7 @@ import utils.JsonUtil;
 
 public class WorkflowSteps extends BaseSteps{
 	YoutubeHomePage youtubeHomePage;
-	// PicoContainer insjects class ContextSteps
+	// PicoContainer injects class ContextSteps
 		public WorkflowSteps(SetUpSteps ctx) {
 		   super(ctx);
 		}
