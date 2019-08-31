@@ -1,0 +1,8 @@
+/target/
+
+.project
+/test-output/
+/screenShots/
+/.settings/
+/.classpath/
+/smoke/

@@ -9,10 +9,12 @@ import java.util.Set;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Reporter;
 
-import core.Controller;
+import io.appium.java_client.AppiumDriver;
 import io.cucumber.core.api.Scenario;
 import io.cucumber.java.After;
 import io.cucumber.java.AfterStep;
@@ -25,10 +27,10 @@ public class SetUpSteps {
 	private static boolean initialized = false;
 	protected String url;
 
-	protected Controller mmpController;
 	
 	public static HashMap<String,String> testMap = new HashMap<String,String>();
 	
+	private static ThreadLocal<AppiumDriver> threadAppiumDriver = new ThreadLocal<AppiumDriver>();
 	private static ThreadLocal<RemoteWebDriver> threadMobileWebDriver = new ThreadLocal<RemoteWebDriver>();
 	private static ThreadLocal<RemoteWebDriver> threadDesktopWebDriver = new ThreadLocal<RemoteWebDriver>();
 	private static ThreadLocal<String> featureFile = new ThreadLocal<String>();
@@ -46,6 +48,11 @@ public class SetUpSteps {
 		return wdriver;
 	}
 	
+	public AppiumDriver getAppiumDriver() {
+		AppiumDriver wdriver = threadAppiumDriver.get();
+		return wdriver;
+	}
+	
 	public WebDriver getDesktopWebDriver() {
 		WebDriver wdriver = threadDesktopWebDriver.get();
 		return wdriver;
@@ -53,6 +60,10 @@ public class SetUpSteps {
 	
 	public static void setMobileWebDriver(RemoteWebDriver driver) {
 		threadMobileWebDriver.set(driver);
+	}
+	
+	public static void setAppiumDriver(AppiumDriver driver) {
+		threadAppiumDriver.set(driver);
 	}
 	
 	public static void setDesktopWebDriver(RemoteWebDriver driver) {
@@ -91,6 +102,7 @@ public class SetUpSteps {
 		
 		try {
 		if (browserName.equalsIgnoreCase("chrome") && platform.contains("@desktopWeb")) {
+			
 			ChromeOptions options = new ChromeOptions();
 			plugin.put("enabled", false);
 			plugin.put("name", "Chrome PDF Viewer");
@@ -107,40 +119,27 @@ public class SetUpSteps {
 			options.addArguments("start-maximized");
 			options.addArguments("--disable-infobars");
 			options.addArguments("--dns-prefetch-disable");
+			
 			setDesktopWebDriver(new RemoteWebDriver(new URL(hub), options));	
-		}else if (browserName.equalsIgnoreCase("chrome") && platform.contains("@mobileWeb")) {
+		}	if (browserName.equalsIgnoreCase("chrome") && platform.contains("@mobileWeb")) {
 			ChromeOptions mobileoptions = new ChromeOptions();
 			HashMap<String, String> mobileEmulation = new HashMap<String, String>();
 
 				mobileEmulation.put("deviceName", "Galaxy S5");
 				mobileoptions.setExperimentalOption("mobileEmulation", mobileEmulation);
 				setMobileWebDriver(new RemoteWebDriver(new URL(hub), mobileoptions));	
-		}else {
-			plugin.put("enabled", false);
-			plugin.put("name", "Chrome PDF Viewer");
-			ChromeOptions options = new ChromeOptions();
-			HashMap<String, Object> prefs = new HashMap<String, Object>();
-			prefs.put("profile.default_content_settings.popups", 0);
-			prefs.put("download.default_directory", downloadPath);
-			prefs.put("profile.default_content_settings.popups", 0);
-			prefs.put("credentials_enable_service", false);
-			prefs.put("profile.password_manager_enabled", false);
-			prefs.put("plugins.plugins_list", Arrays.asList(plugin));
-			
-			options.setExperimentalOption("prefs", prefs);
-			options.addArguments("start-maximized");
-			options.addArguments("--disable-infobars");
-			options.addArguments("--dns-prefetch-disable");
-			setDesktopWebDriver(new RemoteWebDriver(new URL(hub), options));
-			
-			ChromeOptions mobileoptions = new ChromeOptions();
-			HashMap<String, String> mobileEmulation = new HashMap<String, String>();
+		} if (browserName.equalsIgnoreCase("chrome") && platform.contains("@nativemobileapp")){
+	        DesiredCapabilities capabilities = new DesiredCapabilities();
+	        capabilities.setCapability(CapabilityType.BROWSER_NAME, "");
+	        capabilities.setCapability("deviceName", "9243934");
+	        capabilities.setCapability("platformVersion", "9");
+	        capabilities.setCapability("platformName", "Android");
+	        capabilities.setCapability("appPackage", "com.google.android.youtube");
+	        capabilities.setCapability("appActivity", "com.google.android.apps.youtube.app.WatchWhileActivity");
 
-				mobileEmulation.put("deviceName", "Galaxy S5");
-				mobileoptions.setExperimentalOption("mobileEmulation", mobileEmulation);
-				setMobileWebDriver(new RemoteWebDriver(new URL(hub), mobileoptions));	
+				setAppiumDriver(new AppiumDriver(new URL(hub), capabilities));	
 		}
-		mmpController = new Controller(browserName,getDesktopWebDriver(),getMobileWebDriver());
+		//mmpController = new Controller(browserName,getDesktopWebDriver(),getMobileWebDriver(),getAppiumDriver());
 		Reporter.log("Test trigerred from machine: " + System.getenv().get("COMPUTERNAME"), true);
 		setContextVariable("screenShot","notRequired");
 		//Reporter.log("Executing " + scenarioName.get().toUpperCase() + " on grid node: " +getGridExecutionNode(hub), true);
@@ -160,9 +159,9 @@ public class SetUpSteps {
 		return url;
 	}
 	
-	public Controller getController() {
+	/*public Controller getController() {
 		return mmpController;
-	}
+	}*/
 	
 	public static void setAccountInfo(String accountInfo) {
 		threadAccountInfo.set(accountInfo);
@@ -213,19 +212,20 @@ public class SetUpSteps {
 		File directory = new File(".");
 		System.out.println("Path in getpath" + directory.getCanonicalPath());
 	 	try{
-	 		//if(scenario.isFailed()) {
-	          //  DriverUtils.takeScreenShot(scenario, getMobileWebDriver());
-	           // DriverUtils.takeScreenShot(scenario, getDesktopWebDriver());
+	 		if(getDesktopWebDriver()!=null)
+	 		getDesktopWebDriver().quit();
+	 		if(getAppiumDriver()!=null)
+	 		getAppiumDriver().quit();
 	        
 		}catch(Exception e){
 			Reporter.log("Error in Initializing the test", true);
 			e.printStackTrace();
 		}
 		finally{
-			if(mmpController != null){
-				mmpController.getDesktopWebDriverClient().quit();
+			//if(mmpController != null){
+				//getDesktopWebDriverClient().quit();
 				//mmpController.getMobileWebDriverClient().quit();
-			}
+			//}
 			}
     }
 	

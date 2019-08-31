@@ -1,24 +1,29 @@
-package pageobjects;
+package pageobjects.mobile;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import core.BasePage;
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.android.AndroidElement;
+import io.appium.java_client.android.nativekey.AndroidKey;
+import io.appium.java_client.pagefactory.AndroidFindBy;
 
-public class YoutubeDesktopPage extends BasePage {
+public class YoutubeHomePage extends BasePage {
 	
-	public YoutubeDesktopPage(WebDriver driver) {
-		super(driver);
-	}
+	public YoutubeHomePage(AppiumDriver appiumDriver) {
+		super(appiumDriver);
+		
+    }
 	
-	 @FindBy(id= "search")
-	 private WebElement searchInputButton;
+	@AndroidFindBy(accessibility="Search")
+	  private AndroidElement searchInputButton;
 	 
-	 @FindBy(id= "search-icon-legacy")
+	 @FindBy(id="com.google.android.youtube:id/search_edit_text")
 	 private WebElement searchButton;
 	 
 	
@@ -37,9 +42,9 @@ public class YoutubeDesktopPage extends BasePage {
 		}
 	 
 	public void search(String searchText) throws Exception {
-		pageWebDriverClient.waitForVisibilityOfElement(searchInputButton);
-		pageWebDriverClient.setText(searchInputButton, searchText);
-		pageWebDriverClient.click(searchButton);
+		pageWebDriverClient.click(searchInputButton);
+		pageWebDriverClient.setText(searchButton, searchText);
+		appiumDriver.getKeyboard().sendKeys(Keys.ENTER);
 	}
 	
 	public void openChannel(String channelName) throws Exception {

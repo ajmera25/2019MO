@@ -33,7 +33,7 @@ public class WebDriverClient {
 		
 	public WebDriverClient(WebDriver driver) {
 		this.myDriver = driver;
-		myDriver.manage().timeouts().pageLoadTimeout(pageloadtimeout, TimeUnit.SECONDS);
+		//myDriver.manage().timeouts().pageLoadTimeout(pageloadtimeout, TimeUnit.SECONDS);
 		webdriverWait = new WebDriverWait(myDriver, WEBDRIVER_CLIENT_EXPLICIT_DELAY);
 		webdriverWait.ignoring(StaleElementReferenceException.class);
 		setImplicitWait(implicitWait);
@@ -694,14 +694,8 @@ public class WebDriverClient {
 	
 	public boolean click(WebElement element) throws Exception {
 		try {
-			if(isWebElementEnabled(element)){
 				element.click();
 				return true;
-			}
-			else{
-				throw new TestFrameworkException("Click failed as the element is disabled " + element.toString());
-			}
-			
 		}catch(Exception e){
 				throw new TestFrameworkException("Failed to click, as either unable to locate element OR met an exception " + element.toString(),e);
 		}

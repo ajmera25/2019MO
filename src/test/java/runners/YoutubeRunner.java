@@ -1,6 +1,6 @@
 package runners;
 
-import io.cucumber.testng.AbstractTestNGCucumberTests;
+import core.TestNGCucumberTests;
 import io.cucumber.testng.CucumberOptions;
 
 @CucumberOptions(
@@ -8,6 +8,7 @@ import io.cucumber.testng.CucumberOptions;
 	        features = {"classpath:features/youtube.feature"},	        
 			plugin = {"pretty","json:smoke/cucumber.json","html:smoke/cucumber.html"},
 	        glue = {"stepdefinition"},
+	        tags = "@nativemobileapp",
 	        monochrome = true)
-	public class YoutubeRunner extends AbstractTestNGCucumberTests {
+	public class YoutubeRunner extends TestNGCucumberTests {
 	}

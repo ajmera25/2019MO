@@ -22,7 +22,7 @@ public class APIUtils {
 			
 			HttpUrl url = new HttpUrl.Builder()
 					.scheme("https")
-					.host("13fc90e5.ngrok.io")
+					.host("fd308454.ngrok.io")
 					.addPathSegments("video/" + rand)
 					.build();
 			
